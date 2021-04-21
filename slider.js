@@ -4,14 +4,7 @@ let firstImage = "slider1";
 let currentProgressCircle = "circle1";
 // change last image and first image variables depending on amount of images
 
-// change to image click populate slider
-(function showSlider(){
-    let slider = document.getElementById('slider-popup');
-        slider.style.display = "grid";
-       let sliderImage =  document.getElementById('slider1');
-            sliderImage.className = "slider-image-visible";
-            currentImage = sliderImage.id;
-})();
+
 
 (function circleOptions(){
     let theCircles = document.getElementsByClassName("progress-circle");
@@ -22,7 +15,7 @@ let currentProgressCircle = "circle1";
                 circleTransition(circleId);
             });
         }
-    //adds to the only active circle
+    //adds to the only active circle no longer needed now that it populates before bein active? 
     let firstCircle = document.getElementById("circle1");
         firstCircle.addEventListener('click', function(e) {
         let circleId = e.target.id
@@ -33,14 +26,14 @@ let currentProgressCircle = "circle1";
 
 
 (function setSliderButtons(){
-    let leftArrow = document.getElementById("slider-left");
-        leftArrow.addEventListener('click', () => { next();})
+    let leftArrow = document.getElementById("arrow-left");
+        leftArrow.addEventListener('click', () => { previous();})
     
-    let rightArrow = document.getElementById("slider-right");
-        rightArrow.addEventListener('click', () => {previous();});
+    let rightArrow = document.getElementById("arrow-right");
+        rightArrow.addEventListener('click', () => {next();});
 })();
 
-function next(){
+function previous(){
     if (currentImage == firstImage)
     {
         let oldImage = document.getElementById(currentImage);
@@ -64,24 +57,22 @@ function next(){
     }
 }
 
-function previous(){
+function next(){
     if (currentImage == lastImage)
     {
         let oldImage = document.getElementById(currentImage);
         oldImage.style.display = "none";
         let newImage = document.getElementById(firstImage);
         newImage.style.display = "grid";
+        console.log(newImage.id);
         currentImage = newImage.id;
         toggleProgressCircle()
     }else{
-        console.log(currentImage);
         let oldImage = document.getElementById(currentImage);
-        console.log(oldImage);
         oldImage.style.display = "none";
         let oldNumber = oldImage.id.slice(6);
         let newNumber = parseInt(oldNumber, 10);
         newNumber += 1;
-        console.log(newNumber);
         let nextImage = "slider" + newNumber.toString();
         console.log(nextImage);
 
@@ -105,10 +96,6 @@ function toggleProgressCircle(){
 }
 
 
-function hideSlider(){
-    let slider = document.getElementById('slider-popup');
-    slider.style.display = "none";
-}
 
 function circleTransition (circleId) {
 
@@ -128,4 +115,122 @@ function circleTransition (circleId) {
     let newImage = document.getElementById(newImageId);
     newImage.style.display = "grid";
     currentImage = newImage.id;
+}
+
+// module works as expected
+const slideShowModule = (() => {
+    let slideTransitions = "placeholder";
+        let slideShowStatus = "Off";
+
+    function activateSlideshow() 
+    {
+        slideTransitions = setInterval(function(){ next(); }, 5000);
+        slideShowStatus = "On";
+    }
+    
+    function stopSlideshow()
+    {
+    clearInterval(slideTransitions);
+    slideShowStatus = "Off";
+    }
+
+    function toggleSlideShow(){
+        if (slideShowStatus == "Off"){
+            activateSlideshow();
+        }
+        else {
+            stopSlideshow();
+        }
+    }
+
+
+
+return {activateSlideshow, stopSlideshow, toggleSlideShow};
+
+})();
+
+
+function startSlider(slideToStart){
+
+//hide gallery
+let gallery = document.getElementById('gallery');
+gallery.style.display = 'none';
+
+//show slider
+let slider = document.getElementById('slider-popup');
+slider.style.display = "grid";
+let sliderMiddle = document.getElementById('slider-middle');
+    sliderMiddle.style.display = "grid";
+    let sliderRight = document.getElementById('slider-right');
+        sliderRight.style.display = "grid";
+        let sliderLeft = document.getElementById('slider-left');
+        sliderLeft.style.display = "grid";
+
+        //bring up selected image
+       let sliderImage =  document.getElementById(slideToStart);
+            sliderImage.style.display = "grid";
+            currentImage = sliderImage.id;
+
+//set progresscircle
+            let CircleNumber = currentImage.slice(6);
+            let currentCircle = "circle" + CircleNumber;
+            currentProgressCircle = currentCircle;
+            let displayCurrent = document.getElementById(currentCircle);
+                displayCurrent.className = "progress-circle-active";
+
+                slideShowModule.activateSlideshow();
+
+                // setup pauseButton
+                let pauseButton = document.getElementById('pause-button');
+                    pauseButton.addEventListener('click', () => { pauseSlideShow();});
+
+//set up close button
+    let closeIcon = document.getElementById("close-slider");
+        closeIcon.addEventListener('click', () => { closeSlider();});
+
+}
+
+function closeSlider(){
+    //stop slideshow
+    slideShowModule.stopSlideshow();
+
+    //reset picture and circle display
+    let activeCircle = document.getElementById(currentProgressCircle);
+    activeCircle.className = "progress-circle";
+
+    // make sure picture is gone
+    let displayedImage = document.getElementById(currentImage);
+        displayedImage.style.display = "none";
+
+//hide all windows
+    let slider = document.getElementById('slider-popup');
+    slider.style.display = "none";
+    let sliderMiddle = document.getElementById('slider-middle');
+    sliderMiddle.style.display = "none";
+    let sliderRight = document.getElementById('slider-right');
+    sliderRight.style.display = "none";
+    let sliderLeft = document.getElementById('slider-left');
+    sliderLeft.style.display = "none";
+
+// show gallery
+let gallery = document.getElementById('gallery');
+gallery.style.display = 'grid';
+
+}
+
+function pauseSlideShow(){
+    slideShowModule.toggleSlideShow();
+    let pauseButton = document.getElementById('pause-button');
+    console.log(pauseButton.className);
+        if(pauseButton.className == "pause")
+        {
+            pauseButton.className = "paused";
+            console.log(pauseButton.className);
+        }
+        else if (pauseButton.className === "paused")
+        {
+            pauseButton.className = "pause";
+            console.log(pauseButton.className);
+        }
+
 }
