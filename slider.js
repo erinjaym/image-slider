@@ -13,6 +13,24 @@ let currentProgressCircle = "circle1";
             currentImage = sliderImage.id;
 })();
 
+(function circleOptions(){
+    let theCircles = document.getElementsByClassName("progress-circle");
+        for (let circleNumber = 0; circleNumber <= theCircles.length-1; circleNumber++)
+        {
+            theCircles[circleNumber].addEventListener('click', function(e) {
+                let circleId = e.target.id
+                circleTransition(circleId);
+            });
+        }
+    //adds to the only active circle
+    let firstCircle = document.getElementById("circle1");
+        firstCircle.addEventListener('click', function(e) {
+        let circleId = e.target.id
+        circleTransition(circleId);
+    });
+})();
+
+
 
 (function setSliderButtons(){
     let leftArrow = document.getElementById("slider-left");
@@ -32,17 +50,13 @@ function next(){
         currentImage = newImage.id;
         toggleProgressCircle()
     }else{
-        console.log(currentImage);
         let oldImage = document.getElementById(currentImage);
-        console.log(oldImage);
         oldImage.style.display = "none";
         let oldNumber = oldImage.id.slice(6);
         let newNumber = parseInt(oldNumber, 10);
         newNumber -= 1;
-        console.log(newNumber);
-        let nextImage = "slider" + newNumber.toString();
-        console.log(nextImage);
 
+        let nextImage = "slider" + newNumber.toString();
         let newImage = document.getElementById(nextImage);
         newImage.style.display = "grid";
         currentImage = newImage.id;
@@ -94,4 +108,24 @@ function toggleProgressCircle(){
 function hideSlider(){
     let slider = document.getElementById('slider-popup');
     slider.style.display = "none";
+}
+
+function circleTransition (circleId) {
+
+    // untoggle old circle
+    let prevCircle = document.getElementById(currentProgressCircle);
+    prevCircle.className = "progress-circle";
+     // hide old photo first 
+    let oldImage = document.getElementById(currentImage);
+    oldImage.style.display = "none";
+
+    currentProgressCircle =  circleId;
+    let progressCircle = document.getElementById(currentProgressCircle);
+    progressCircle.className = "progress-circle-active";
+
+    let newImageId = currentProgressCircle.slice(6);
+    newImageId = "slider" + newImageId;
+    let newImage = document.getElementById(newImageId);
+    newImage.style.display = "grid";
+    currentImage = newImage.id;
 }
