@@ -1,0 +1,134 @@
+html{
+    background-color: black;
+}
+
+.image-thumbnail
+{
+border: solid white 2px;
+border-radius: 1%;
+height: 200px;
+width: 300px;
+}
+
+.site-container{
+background-color: black;
+color: white;
+}
+
+.gallery-overview{
+    background-color: black;
+    top: 20%;
+    left: 45%;
+}
+
+.gallery{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    row-gap: 10px;
+    background-color: black;
+    height: 500px;
+    padding: 10px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-500px, -250px);
+    width: 1000px;
+}
+
+.slider-popup
+{
+background-color: rgba(8, 8, 8, 0.11);
+display: none;
+grid-template-columns: .5fr 1fr .5fr;
+grid-template-rows: 1fr;
+position: absolute;
+top: 100px;
+left: 0;
+right: 0;
+height: 600px;
+z-index: 1;
+}
+
+.slider-middle
+{
+align-items: center;
+background-color: rgb(68, 68, 68);
+display: grid;
+justify-items: center;
+grid-row: .9fr .1fr;
+}
+
+.slider-left
+{
+align-items: center;
+background-color: rgb(68, 68, 68);
+display: grid;
+justify-items: center;
+opacity: 50%;
+}
+
+.slider-right
+{
+    align-items: center;
+    background-color: rgb(68, 68, 68);
+    display: grid;
+    justify-items: center;
+    opacity: 50%;
+}
+
+.slider-image-visible
+{
+display: grid;
+height: 600px;
+width: 1000px;
+}
+
+.slider-image
+{
+display: none;
+height: 600px;
+width: 1000px;
+}
+
+.arrow-right {
+    width: 0; 
+    height: 0; 
+    border-top: 160px solid transparent;
+    border-bottom: 160px solid transparent;
+    border-left: 160px solid rgb(13, 14, 13);
+  }
+  
+  .arrow-left {
+    width: 0px; 
+    height: 0px; 
+    border-top: 160px solid transparent;
+    border-bottom: 160px solid transparent; 
+    border-right:160px solid rgb(18, 18, 19); 
+  }
+
+  .progress-circle {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .progress-circle:hover {
+    height: 25px;
+    width: 25px;
+    background-color: rgb(14, 13, 13);
+    border-radius: 50%;
+    display: inline-block;
+    transition-duration: 3s;
+  }
+  .progress-circle-active {
+    height: 25px;
+    width: 25px;
+    background-color: rgb(5, 5, 5);
+    border-radius: 50%;
+    border: solid 1px white;
+    display: inline-block;
+    transition-duration: 1s;
+}
