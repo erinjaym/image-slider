@@ -4,56 +4,40 @@ let firstImage = "slider1";
 let currentProgressCircle = "circle1";
 
 
-(function circleOptions(){
-    let theCircles = document.getElementsByClassName("progress-circle");
-        for (let circleNumber = 0; circleNumber <= theCircles.length-1; circleNumber++)
-        {
+const buttonModule = ( function (){
+(function setSliderButtons(){
+
+    (function setLeftArrow () {
+    let leftArrow = document.getElementById("arrow-left");
+        leftArrow.addEventListener('click', () => { previousImage();})
+    }) ();
+
+    (function setRightArrow () {
+    let rightArrow = document.getElementById("arrow-right");
+        rightArrow.addEventListener('click', () => {nextImage();});
+    }) ();
+
+    (function setPauseButton () {
+    let pauseButton = document.getElementById('pause-button');
+        pauseButton.addEventListener('click', () => { pauseSlideShow();});
+    }) ();
+
+    (function setCloseButton () {
+    let closeIcon = document.getElementById("close-slider");
+        closeIcon.addEventListener('click', () => { endSlider();});
+    }) ();
+        
+    (function setCircleOptions(){
+    // find all progress circle buttons and link them to a corresponding image on click
+        let theCircles = document.getElementsByClassName("progress-circle");
+        for (let circleNumber = 0; circleNumber <= theCircles.length-1; circleNumber++){
             theCircles[circleNumber].addEventListener('click', function(e) {
-                let circleId = e.target.id
-                circleTransition(circleId);
+            let circleId = e.target.id
+            circleImageSelector(circleId);
             });
         }
-    //adds to the only active circle no longer needed now that it populates before bein active? 
-    let firstCircle = document.getElementById("circle1");
-        firstCircle.addEventListener('click', function(e) {
-        let circleId = e.target.id
-        circleTransition(circleId);
-    });
+        })();
 })();
-
-
-
-(function setSliderButtons(){
-    let leftArrow = document.getElementById("arrow-left");
-        leftArrow.addEventListener('click', () => { previous();})
-    
-    let rightArrow = document.getElementById("arrow-right");
-        rightArrow.addEventListener('click', () => {next();});
-})();
-
-function previous(){
-    if (currentImage == firstImage)
-    {
-        let oldImage = document.getElementById(currentImage);
-        oldImage.className = "slider-image";
-        let newImage = document.getElementById(lastImage);
-        newImage.className = "slider-image-visible";
-        currentImage = newImage.id;
-        toggleProgressCircle()
-    }else{
-        let oldImage = document.getElementById(currentImage);
-        oldImage.className = "slider-image";
-        let oldNumber = oldImage.id.slice(6);
-        let newNumber = parseInt(oldNumber, 10);
-        newNumber -= 1;
-
-        let nextImage = "slider" + newNumber.toString();
-        let newImage = document.getElementById(nextImage);
-        newImage.className = "slider-image-visible";
-        currentImage = newImage.id;
-        toggleProgressCircle()
-    }
-}
 
 function next(){
     if (currentImage == lastImage)
@@ -81,8 +65,42 @@ function next(){
     }
 }
 
-function toggleProgressCircle(){
+function previous(){
+    if (currentImage == firstImage)
+    {
+        let oldImage = document.getElementById(currentImage);
+        oldImage.className = "slider-image";
+        let newImage = document.getElementById(lastImage);
+        newImage.className = "slider-image-visible";
+        currentImage = newImage.id;
+        toggleProgressCircle()
+    }else{
+        let oldImage = document.getElementById(currentImage);
+        oldImage.className = "slider-image";
+        let oldNumber = oldImage.id.slice(6);
+        let newNumber = parseInt(oldNumber, 10);
+        newNumber -= 1;
 
+        let nextImage = "slider" + newNumber.toString();
+        let newImage = document.getElementById(nextImage);
+        newImage.className = "slider-image-visible";
+        currentImage = newImage.id;
+        toggleProgressCircle()
+    }
+}
+return {next, previous};
+}) (); // end of button module
+
+
+function nextImage(){
+buttonModule.next();
+}
+
+function previousImage(){
+    buttonModule.previous();
+}
+
+function toggleProgressCircle(){
     let prevCircle = document.getElementById(currentProgressCircle);
     prevCircle.className = "progress-circle";
     let CircleNumber = currentImage.slice(6);
@@ -90,24 +108,20 @@ function toggleProgressCircle(){
     currentProgressCircle = currentCircle;
     let progressCircle = document.getElementById(currentCircle);
     progressCircle.className = "progress-circle-active";
-
 }
 
-
-
-function circleTransition (circleId) {
-
+function circleImageSelector(circleId) {
     // untoggle old circle
     let prevCircle = document.getElementById(currentProgressCircle);
     prevCircle.className = "progress-circle";
-     // hide old photo first 
+     // hide old photo 
     let oldImage = document.getElementById(currentImage);
     oldImage.className = "slider-image";
-
+    //toggle Current circle
     currentProgressCircle =  circleId;
     let progressCircle = document.getElementById(currentProgressCircle);
     progressCircle.className = "progress-circle-active";
-
+    //show new image
     let newImageId = currentProgressCircle.slice(6);
     newImageId = "slider" + newImageId;
     let newImage = document.getElementById(newImageId);
@@ -122,7 +136,7 @@ const slideShowModule = (() => {
 
     function activateSlideshow() 
     {
-        slideTransitions = setInterval(function(){ next(); }, 5000);
+        slideTransitions = setInterval(function(){ nextImage(); }, 5000);
         slideShowStatus = "On";
     }
     
@@ -141,20 +155,38 @@ const slideShowModule = (() => {
         }
     }
 
-
-
-return {activateSlideshow, stopSlideshow, toggleSlideShow};
-
+    function pauseSlides(){
+        let pauseButton = document.getElementById('pause-button');
+            if(pauseButton.className == "pause")
+            {
+                pauseButton.className = "paused";
+                toggleSlideShow();
+            }
+            else if (pauseButton.className === "paused")
+            {
+                pauseButton.className = "pause";
+                toggleSlideShow();
+            }
+    }
+return {activateSlideshow, stopSlideshow, toggleSlideShow, pauseSlides};
 })();
 
 
+function pauseSlideShow(){
+    slideShowModule.pauseSlides();
+}
+
+
+
+// function to start to be placed on a button or image
 function startSlider(slideToStart){
 
-//hide gallery
+(function hideGallery() {
 let gallery = document.getElementById('gallery');
 gallery.style.display = 'none';
+})();
 
-//show slider
+(function showSliderWindow() {
 let slider = document.getElementById('slider-popup');
 slider.style.display = "grid";
 let sliderMiddle = document.getElementById('slider-middle');
@@ -163,44 +195,45 @@ let sliderMiddle = document.getElementById('slider-middle');
         sliderRight.style.display = "grid";
         let sliderLeft = document.getElementById('slider-left');
         sliderLeft.style.display = "grid";
+}) ();
 
-        //bring up selected image
+(function showSelectedImage () {
        let sliderImage =  document.getElementById(slideToStart);
             sliderImage.className = "slider-image-visible";
             currentImage = sliderImage.id;
+}) ();
 
-//set progresscircle
+(function selectProgressCircle () {
             let CircleNumber = currentImage.slice(6);
             let currentCircle = "circle" + CircleNumber;
             currentProgressCircle = currentCircle;
             let displayCurrent = document.getElementById(currentCircle);
                 displayCurrent.className = "progress-circle-active";
-
+}) ();
+                //activate timing between slides
                 slideShowModule.activateSlideshow();
-
-                // setup pauseButton
-                let pauseButton = document.getElementById('pause-button');
-                    pauseButton.addEventListener('click', () => { pauseSlideShow();});
-
-//set up close button
-    let closeIcon = document.getElementById("close-slider");
-        closeIcon.addEventListener('click', () => { closeSlider();});
-
 }
 
-function closeSlider(){
-    //stop slideshow
+function endSlider(){
+
     slideShowModule.stopSlideshow();
 
-    //reset picture and circle display
+    (function resetPauseButton () {
+    let pauseButton = document.getElementById('pause-button');
+        pauseButton.className ="pause";
+    }) ();
+
+    (function resetCircleDisplay () {
     let activeCircle = document.getElementById(currentProgressCircle);
     activeCircle.className = "progress-circle";
+    }) ();
 
-    // make sure picture is gone
+    (function hideLastImage () {
     let displayedImage = document.getElementById(currentImage);
         displayedImage.className = "slider-image";
+    }) ();
 
-//hide all windows
+(function hideSliderWindow () { 
     let slider = document.getElementById('slider-popup');
     slider.style.display = "none";
     let sliderMiddle = document.getElementById('slider-middle');
@@ -209,26 +242,10 @@ function closeSlider(){
     sliderRight.style.display = "none";
     let sliderLeft = document.getElementById('slider-left');
     sliderLeft.style.display = "none";
+}) ();
 
-// show gallery
+(function showGallery () {
 let gallery = document.getElementById('gallery');
 gallery.style.display = 'grid';
-
-}
-
-function pauseSlideShow(){
-    slideShowModule.toggleSlideShow();
-    let pauseButton = document.getElementById('pause-button');
-    console.log(pauseButton.className);
-        if(pauseButton.className == "pause")
-        {
-            pauseButton.className = "paused";
-            console.log(pauseButton.className);
-        }
-        else if (pauseButton.className === "paused")
-        {
-            pauseButton.className = "pause";
-            console.log(pauseButton.className);
-        }
-
+}) ();
 }
