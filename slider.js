@@ -46,7 +46,6 @@ function next(){
         oldImage.className = "slider-image";
         let newImage = document.getElementById(firstImage);
         newImage.className = "slider-image-visible";
-        console.log(newImage.id);
         currentImage = newImage.id;
         toggleProgressCircle()
     }else{
@@ -56,7 +55,6 @@ function next(){
         let newNumber = parseInt(oldNumber, 10);
         newNumber += 1;
         let nextImage = "slider" + newNumber.toString();
-        console.log(nextImage);
 
         let newImage = document.getElementById(nextImage);
         newImage.className = "slider-image-visible";
