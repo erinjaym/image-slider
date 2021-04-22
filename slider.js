@@ -2,8 +2,6 @@ let currentImage = "0";
 let lastImage = "slider6";
 let firstImage = "slider1";
 let currentProgressCircle = "circle1";
-// change last image and first image variables depending on amount of images
-
 
 
 (function circleOptions(){
@@ -37,21 +35,21 @@ function previous(){
     if (currentImage == firstImage)
     {
         let oldImage = document.getElementById(currentImage);
-        oldImage.style.display = "none";
+        oldImage.className = "slider-image";
         let newImage = document.getElementById(lastImage);
-        newImage.style.display = "grid";
+        newImage.className = "slider-image-visible";
         currentImage = newImage.id;
         toggleProgressCircle()
     }else{
         let oldImage = document.getElementById(currentImage);
-        oldImage.style.display = "none";
+        oldImage.className = "slider-image";
         let oldNumber = oldImage.id.slice(6);
         let newNumber = parseInt(oldNumber, 10);
         newNumber -= 1;
 
         let nextImage = "slider" + newNumber.toString();
         let newImage = document.getElementById(nextImage);
-        newImage.style.display = "grid";
+        newImage.className = "slider-image-visible";
         currentImage = newImage.id;
         toggleProgressCircle()
     }
@@ -61,15 +59,15 @@ function next(){
     if (currentImage == lastImage)
     {
         let oldImage = document.getElementById(currentImage);
-        oldImage.style.display = "none";
+        oldImage.className = "slider-image";
         let newImage = document.getElementById(firstImage);
-        newImage.style.display = "grid";
+        newImage.className = "slider-image-visible";
         console.log(newImage.id);
         currentImage = newImage.id;
         toggleProgressCircle()
     }else{
         let oldImage = document.getElementById(currentImage);
-        oldImage.style.display = "none";
+        oldImage.className = "slider-image";
         let oldNumber = oldImage.id.slice(6);
         let newNumber = parseInt(oldNumber, 10);
         newNumber += 1;
@@ -77,7 +75,7 @@ function next(){
         console.log(nextImage);
 
         let newImage = document.getElementById(nextImage);
-        newImage.style.display = "grid";
+        newImage.className = "slider-image-visible";
         currentImage = newImage.id;
         toggleProgressCircle()
     }
@@ -104,7 +102,7 @@ function circleTransition (circleId) {
     prevCircle.className = "progress-circle";
      // hide old photo first 
     let oldImage = document.getElementById(currentImage);
-    oldImage.style.display = "none";
+    oldImage.className = "slider-image";
 
     currentProgressCircle =  circleId;
     let progressCircle = document.getElementById(currentProgressCircle);
@@ -113,11 +111,11 @@ function circleTransition (circleId) {
     let newImageId = currentProgressCircle.slice(6);
     newImageId = "slider" + newImageId;
     let newImage = document.getElementById(newImageId);
-    newImage.style.display = "grid";
+    newImage.className = "slider-image-visible";
     currentImage = newImage.id;
 }
 
-// module works as expected
+
 const slideShowModule = (() => {
     let slideTransitions = "placeholder";
         let slideShowStatus = "Off";
@@ -168,7 +166,7 @@ let sliderMiddle = document.getElementById('slider-middle');
 
         //bring up selected image
        let sliderImage =  document.getElementById(slideToStart);
-            sliderImage.style.display = "grid";
+            sliderImage.className = "slider-image-visible";
             currentImage = sliderImage.id;
 
 //set progresscircle
@@ -200,7 +198,7 @@ function closeSlider(){
 
     // make sure picture is gone
     let displayedImage = document.getElementById(currentImage);
-        displayedImage.style.display = "none";
+        displayedImage.className = "slider-image";
 
 //hide all windows
     let slider = document.getElementById('slider-popup');
